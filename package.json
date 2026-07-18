@@ -1,6 +1,6 @@
 {
   "name": "table-demaker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Pablo Gallina",
   "license": "MIT",
   "description": "A DataTable component for React, built on Chakra UI and TanStack Table",

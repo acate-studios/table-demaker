@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-import { Button } from "../ui/button";
+import { Button, ButtonProps } from "../ui/button";
 
 interface PaginationControlsProps {
   pageIndex: number;
@@ -9,6 +9,7 @@ interface PaginationControlsProps {
   canNextPage: boolean;
   previousPage: () => void;
   nextPage: () => void;
+  buttonProps?: ButtonProps;
 }
 
 export const PaginationControls = ({
@@ -18,13 +19,14 @@ export const PaginationControls = ({
   canNextPage,
   previousPage,
   nextPage,
+  buttonProps,
 }: PaginationControlsProps) => {
   return (
     <Flex justifyContent="space-between" alignItems="center" mt={4}>
       <Button
+        {...buttonProps}
         onClick={previousPage}
         disabled={!canPreviousPage}
-        variant="social"
       >
         Anterior
       </Button>
@@ -32,7 +34,7 @@ export const PaginationControls = ({
       <Text fontSize="sm">
         Página {pageIndex + 1} de {pageCount}
       </Text>
-      <Button onClick={nextPage} disabled={!canNextPage} variant="social">
+      <Button {...buttonProps} onClick={nextPage} disabled={!canNextPage}>
         Siguiente
       </Button>
     </Flex>

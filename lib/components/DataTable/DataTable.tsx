@@ -1,4 +1,4 @@
-import { Table, TableRootProps } from "@chakra-ui/react";
+import { InputProps, Table, TableRootProps } from "@chakra-ui/react";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
+import { ButtonProps } from "../ui/button";
 import { GlobalFilter } from "./GlobalFilter";
 import { PaginationControls } from "./PaginationControls";
 import { TableBody } from "./TableBody";
@@ -18,6 +19,8 @@ interface DataTableProps<TData extends object> {
   columns: ColumnDef<TData>[];
   tableProps?: TableRootProps;
   loading?: boolean;
+  filterProps?: InputProps;
+  paginationButtonProps?: ButtonProps;
 }
 
 export const DataTable = <TData extends object>({
@@ -25,6 +28,8 @@ export const DataTable = <TData extends object>({
   columns,
   tableProps,
   loading = false,
+  filterProps,
+  paginationButtonProps,
 }: DataTableProps<TData>) => {
   const [globalFilter, setGlobalFilter] = useState("");
 
@@ -45,7 +50,11 @@ export const DataTable = <TData extends object>({
   return (
     <div>
       {/* Filtro Global */}
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      <GlobalFilter
+        filter={globalFilter}
+        setFilter={setGlobalFilter}
+        inputProps={filterProps}
+      />
 
       {/* Tabla */}
       <Table.Root {...tableProps}>
@@ -65,6 +74,7 @@ export const DataTable = <TData extends object>({
         canNextPage={table.getCanNextPage()}
         previousPage={() => table.previousPage()}
         nextPage={() => table.nextPage()}
+        buttonProps={paginationButtonProps}
       />
     </div>
   );

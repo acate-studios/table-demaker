@@ -32,6 +32,11 @@ export default defineConfig({
         "@chakra-ui/react",
         "@emotion/react",
         "@tanstack/react-table",
+        "nuqs",
+        "form-demaker",
+        "react-hook-form",
+        "zod",
+        "@hookform/resolvers",
       ],
       output: {
         assetFileNames: "assets/[name][extname]",

@@ -21,6 +21,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, "lib/index.ts"),
+        "query-filters": resolve(__dirname, "lib/query-filters/index.ts"),
       },
       formats: ["es"],
     },

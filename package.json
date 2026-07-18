@@ -17,6 +17,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./query-filters": {
+      "types": "./dist/query-filters.d.ts",
+      "import": "./dist/query-filters.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

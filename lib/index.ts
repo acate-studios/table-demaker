@@ -1,2 +1,2 @@
-// Placeholder entry point. The public barrel (DataTable + types) lands in Fase 5.
-export {};
+export { DataTable, type DataTableProps } from "./components/DataTable";
+export type { ColumnDef } from "@tanstack/react-table";

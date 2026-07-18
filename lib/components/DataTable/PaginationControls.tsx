@@ -1,6 +1,6 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { ButtonProps, Flex, Text } from "@chakra-ui/react";
 
-import { Button, ButtonProps } from "../ui/button";
+import { Button } from "../ui/button";
 
 interface PaginationControlsProps {
   pageIndex: number;

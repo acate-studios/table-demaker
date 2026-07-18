@@ -1,4 +1,9 @@
-import { InputProps, Table, TableRootProps } from "@chakra-ui/react";
+import {
+  ButtonProps,
+  InputProps,
+  Table,
+  TableRootProps,
+} from "@chakra-ui/react";
 import {
   ColumnDef,
   getCoreRowModel,
@@ -8,13 +13,12 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { ButtonProps } from "../ui/button";
 import { GlobalFilter } from "./GlobalFilter";
 import { PaginationControls } from "./PaginationControls";
 import { TableBody } from "./TableBody";
 import { TableHeader } from "./TableHeader";
 
-interface DataTableProps<TData extends object> {
+export interface DataTableProps<TData extends object> {
   data: TData[];
   columns: ColumnDef<TData>[];
   tableProps?: TableRootProps;

@@ -1,6 +1,6 @@
 {
   "name": "table-demaker",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Pablo Gallina",
   "license": "MIT",
   "description": "A DataTable component for React, built on Chakra UI and TanStack Table",
@@ -9,7 +9,16 @@
     "node": ">=24"
   },
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -37,6 +46,7 @@
     "@emotion/react": "^11.14.0",
     "@eslint/compat": "^2.1.0",
     "@eslint/js": "^10.0.1",
+    "@microsoft/api-extractor": "^7.58.11",
     "@storybook/addon-a11y": "10.4.6",
     "@storybook/addon-docs": "10.4.6",
     "@storybook/addon-links": "^10.4.6",

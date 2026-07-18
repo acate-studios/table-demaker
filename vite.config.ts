@@ -13,15 +13,16 @@ export default defineConfig({
       include: ["lib"],
       outDirs: "dist",
       exclude: ["**/*.test.*", "**/*.stories.*"],
+      bundleTypes: true,
     }),
   ],
   build: {
     copyPublicDir: false,
     lib: {
-      entry: resolve(__dirname, "lib/index.ts"),
+      entry: {
+        index: resolve(__dirname, "lib/index.ts"),
+      },
       formats: ["es"],
-      fileName: (format) => `index.${format}.js`,
-      name: "TableDemaker",
     },
     rolldownOptions: {
       external: [

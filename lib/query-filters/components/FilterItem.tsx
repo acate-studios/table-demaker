@@ -1,11 +1,10 @@
 import { Button, Flex, IconButton, MenuItem, Text } from "@chakra-ui/react";
 import { AdaptiveInputProps, FormDemaker } from "form-demaker";
-import { useRef } from "react";
+import { ReactNode, useRef } from "react";
 
 import { MenuContent, MenuRoot, MenuTrigger } from "@/components/ui/menu";
 import { useColorModeHex, useColorModeTheme } from "@/hooks/useColorMode";
 
-import FilterIcon from "../Icons/FilterIcon";
 import { useQueryFilters } from "../store/queryFilters.store";
 
 const inputs = (): AdaptiveInputProps[] => {
@@ -41,7 +40,11 @@ const inputs = (): AdaptiveInputProps[] => {
   ];
 };
 
-export const FilterItem = () => {
+interface FilterItemProps {
+  icon: ReactNode;
+}
+
+export const FilterItem = ({ icon }: FilterItemProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const { addQueriesFilters } = useQueryFilters();
@@ -59,7 +62,7 @@ export const FilterItem = () => {
           _hover={{ backgroundColor: "gray.200" }}
           px={1}
         >
-          <FilterIcon strokeWidth={2} color={grayColor} />
+          {icon}
           <Text color={grayColor}>Filter By</Text>
         </IconButton>
       </MenuTrigger>

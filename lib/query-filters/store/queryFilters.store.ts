@@ -11,7 +11,8 @@ const parsers = Object.fromEntries(
   FILTER_FIELDS.map((name) => [name, parseAsString]),
 ) as Record<FilterField, typeof parseAsString>;
 
-// shallow stays default (true): data is fetched client-side via useApiQuery.
+// shallow stays default (true): the URL is the single source of truth and
+// consumers read it client-side, so the server does not need to be notified.
 const queryStateOptions = {
   history: "replace",
   clearOnDefault: true,

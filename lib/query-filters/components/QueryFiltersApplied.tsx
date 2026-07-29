@@ -1,8 +1,6 @@
 import { Badge, Flex, IconButton } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-import { useColorModeHex } from "@/hooks/useColorMode";
-
 import { useQueryFilters } from "../store/queryFilters.store";
 
 interface QueryFiltersAppliedProps {
@@ -14,7 +12,6 @@ export const QueryFiltersApplied = ({
   appliedIcon,
   removeIcon,
 }: QueryFiltersAppliedProps) => {
-  const { white, colorText } = useColorModeHex();
   const { queryFilters, deleteQueryFilter } = useQueryFilters();
 
   return (
@@ -22,12 +19,12 @@ export const QueryFiltersApplied = ({
       {appliedIcon}
 
       {queryFilters.map((filter, index) => (
-        <Badge variant="secondary" key={index} pl={4}>
+        <Badge variant="subtle" key={index} pl={4}>
           {filter.name}: {filter.value}
           <IconButton
             aria-label="Close"
             size="xs"
-            variant="small"
+            variant="ghost"
             ml={2}
             onClick={() => deleteQueryFilter(index)}
           >

@@ -3,7 +3,6 @@ import { AdaptiveInputProps, FormDemaker } from "form-demaker";
 import { ReactNode, useRef } from "react";
 
 import { MenuContent, MenuRoot, MenuTrigger } from "@/components/ui/menu";
-import { useColorModeHex, useColorModeTheme } from "@/hooks/useColorMode";
 
 import { useQueryFilters } from "../store/queryFilters.store";
 
@@ -42,28 +41,22 @@ const inputs = (): AdaptiveInputProps[] => {
 
 interface FilterItemProps {
   icon: ReactNode;
+  subtitleColor?: string;
 }
 
-export const FilterItem = ({ icon }: FilterItemProps) => {
+export const FilterItem = ({ icon, subtitleColor }: FilterItemProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const { addQueriesFilters } = useQueryFilters();
 
-  const { backgroundColor } = useColorModeTheme();
-  const { grayColor } = useColorModeHex();
-
   return (
     <MenuRoot>
       <MenuTrigger asChild>
-        <IconButton
-          aria-label="Notifications"
-          backgroundColor={backgroundColor}
-          _active={{ backgroundColor: "none" }}
-          _hover={{ backgroundColor: "gray.200" }}
-          px={1}
-        >
+        <IconButton aria-label="Filter By" variant="ghost" px={1}>
           {icon}
-          <Text color={grayColor}>Filter By</Text>
+          <Text color={subtitleColor} opacity={0.6}>
+            Filter By
+          </Text>
         </IconButton>
       </MenuTrigger>
 
@@ -84,7 +77,7 @@ export const FilterItem = ({ icon }: FilterItemProps) => {
           inputs={inputs()}
           onSubmit={(values) => {
             addQueriesFilters(
-              Object.entries(values).map(([name, value]) => ({ name, value }))
+              Object.entries(values).map(([name, value]) => ({ name, value })),
             );
           }}
         />
@@ -98,7 +91,7 @@ export const FilterItem = ({ icon }: FilterItemProps) => {
           closeOnSelect={false}
           p={0}
         >
-          <Button variant="text" onClick={() => formRef.current?.submitForm()}>
+          <Button variant="plain" onClick={() => formRef.current?.submitForm()}>
             Apply
           </Button>
         </MenuItem>

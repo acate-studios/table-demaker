@@ -1,4 +1,5 @@
 import { Flex, FlexProps, Separator } from "@chakra-ui/react";
+import { AdaptiveInputProps } from "form-demaker";
 import { ReactNode } from "react";
 
 import { FilterItem } from "./FilterItem";
@@ -26,6 +27,7 @@ interface QueryFiltersIconColor {
 }
 
 interface QueryFiltersProps extends FlexProps {
+  inputs: AdaptiveInputProps[];
   title?: string;
   dataCount?: number;
   icons?: QueryFiltersIcons;
@@ -34,6 +36,7 @@ interface QueryFiltersProps extends FlexProps {
 }
 
 const QueryFilters = ({
+  inputs,
   title,
   dataCount,
   icons,
@@ -47,6 +50,7 @@ const QueryFilters = ({
         <Title {...{ title, dataCount, textColor }} />
         <Separator orientation="vertical" height="6" size="md" />
         <FilterItem
+          inputs={inputs}
           subtitleColor={textColor?.subtitle}
           icon={
             icons?.filter ?? (

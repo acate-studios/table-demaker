@@ -6,45 +6,13 @@ import { MenuContent, MenuRoot, MenuTrigger } from "@/components/ui/menu";
 
 import { useQueryFilters } from "../store/queryFilters.store";
 
-const inputs = (): AdaptiveInputProps[] => {
-  return [
-    {
-      inputType: "number",
-      name: "DPI",
-      label: "DPI",
-      inputProps: {
-        placeholder: "Enter your DPI",
-      },
-      rules: {
-        minLength: {
-          value: 13,
-          message: "DPI must have 13 characters",
-        },
-      },
-    },
-    {
-      inputType: "text",
-      name: "Name",
-      label: "Name",
-      inputProps: {
-        placeholder: "Enter your Name",
-      },
-      rules: {
-        maxLength: {
-          value: 50,
-          message: "Name must have less than 50 characters",
-        },
-      },
-    },
-  ];
-};
-
 interface FilterItemProps {
+  inputs: AdaptiveInputProps[];
   icon: ReactNode;
   subtitleColor?: string;
 }
 
-export const FilterItem = ({ icon, subtitleColor }: FilterItemProps) => {
+export const FilterItem = ({ inputs, icon, subtitleColor }: FilterItemProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const { addQueriesFilters } = useQueryFilters();
@@ -74,7 +42,7 @@ export const FilterItem = ({ icon, subtitleColor }: FilterItemProps) => {
             mb: 2,
             gap: 2,
           }}
-          inputs={inputs()}
+          inputs={inputs}
           onSubmit={(values) => {
             addQueriesFilters(
               Object.entries(values).map(([name, value]) => ({ name, value })),

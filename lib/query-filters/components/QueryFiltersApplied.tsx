@@ -4,15 +4,17 @@ import { ReactNode } from "react";
 import { useQueryFilters } from "../store/queryFilters.store";
 
 interface QueryFiltersAppliedProps {
+  names: string[];
   appliedIcon: ReactNode;
   removeIcon: ReactNode;
 }
 
 export const QueryFiltersApplied = ({
+  names,
   appliedIcon,
   removeIcon,
 }: QueryFiltersAppliedProps) => {
-  const { queryFilters, deleteQueryFilter } = useQueryFilters();
+  const { queryFilters, deleteQueryFilter } = useQueryFilters(names);
 
   return (
     <Flex gap={2} alignItems="center">

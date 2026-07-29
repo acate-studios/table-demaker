@@ -8,14 +8,20 @@ import { useQueryFilters } from "../store/queryFilters.store";
 
 interface FilterItemProps {
   inputs: AdaptiveInputProps[];
+  names: string[];
   icon: ReactNode;
   subtitleColor?: string;
 }
 
-export const FilterItem = ({ inputs, icon, subtitleColor }: FilterItemProps) => {
+export const FilterItem = ({
+  inputs,
+  names,
+  icon,
+  subtitleColor,
+}: FilterItemProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { addQueriesFilters } = useQueryFilters();
+  const { addQueriesFilters } = useQueryFilters(names);
 
   return (
     <MenuRoot>

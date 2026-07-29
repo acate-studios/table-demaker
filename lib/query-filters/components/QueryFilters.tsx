@@ -1,6 +1,6 @@
 import { Flex, FlexProps, Separator } from "@chakra-ui/react";
 import { AdaptiveInputProps } from "form-demaker";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 
 import { FilterItem } from "./FilterItem";
 import DefaultAppliedIcon from "./Icons/DefaultAppliedIcon";
@@ -44,6 +44,8 @@ const QueryFilters = ({
   iconColor,
   ...props
 }: QueryFiltersProps) => {
+  const names = useMemo(() => inputs.map((input) => input.name), [inputs]);
+
   return (
     <Flex gap={5} direction="column" {...props}>
       <Flex gap={4} alignItems="center">
@@ -51,6 +53,7 @@ const QueryFilters = ({
         <Separator orientation="vertical" height="6" size="md" />
         <FilterItem
           inputs={inputs}
+          names={names}
           subtitleColor={textColor?.subtitle}
           icon={
             icons?.filter ?? (
@@ -61,6 +64,7 @@ const QueryFilters = ({
       </Flex>
 
       <QueryFiltersApplied
+        names={names}
         appliedIcon={
           icons?.applied ?? (
             <DefaultAppliedIcon

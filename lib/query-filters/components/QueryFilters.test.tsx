@@ -9,6 +9,22 @@ import QueryFilters from "./QueryFilters";
 
 const TEST_INPUTS: AdaptiveInputProps[] = [
   {
+    inputType: "number",
+    name: "DPI",
+    label: "DPI",
+    inputProps: {
+      placeholder: "Enter your DPI",
+    },
+  },
+  {
+    inputType: "text",
+    name: "Name",
+    label: "Name",
+    inputProps: {
+      placeholder: "Enter your Name",
+    },
+  },
+  {
     inputType: "text",
     name: "Email",
     label: "Email",
@@ -104,5 +120,21 @@ describe("QueryFilters", () => {
     await user.click(screen.getByRole("button", { name: /Filter By/i }));
 
     expect(await screen.findByText("Email")).toBeInTheDocument();
+  });
+
+  it("adds a filter when the form is submitted", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<QueryFilters title="Users" inputs={TEST_INPUTS} />);
+
+    await user.click(screen.getByRole("button", { name: /Filter By/i }));
+    await user.type(
+      await screen.findByPlaceholderText("Enter your Email"),
+      "ada@demaker.dev",
+    );
+    await user.click(screen.getByRole("button", { name: "Apply" }));
+
+    expect(
+      await screen.findByText(/Email: ada@demaker.dev/),
+    ).toBeInTheDocument();
   });
 });

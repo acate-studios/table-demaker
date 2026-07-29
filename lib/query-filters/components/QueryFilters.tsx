@@ -9,24 +9,24 @@ import DefaultRemoveIcon from "./Icons/DefaultRemoveIcon";
 import { QueryFiltersApplied } from "./QueryFiltersApplied";
 import { Title } from "./Title";
 
-interface QueryFiltersIcons {
+export interface QueryFiltersIcons {
   filter?: ReactNode;
   applied?: ReactNode;
   remove?: ReactNode;
 }
 
-interface QueryFiltersTextColor {
+export interface QueryFiltersTextColor {
   title?: string;
   subtitle?: string;
 }
 
-interface QueryFiltersIconColor {
+export interface QueryFiltersIconColor {
   filter?: string;
   applied?: string;
   remove?: string;
 }
 
-interface QueryFiltersProps extends FlexProps {
+export interface QueryFiltersProps extends FlexProps {
   inputs: AdaptiveInputProps[];
   title?: string;
   dataCount?: number;

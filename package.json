@@ -1,6 +1,6 @@
 {
   "name": "table-demaker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Pablo Gallina",
   "license": "MIT",
   "description": "A DataTable component for React, built on Chakra UI and TanStack Table",
@@ -47,6 +47,23 @@
     "react": "^19.2.0",
     "react-hook-form": "^7.65.0",
     "zod": "^4.1.12"
+  },
+  "peerDependenciesMeta": {
+    "@hookform/resolvers": {
+      "optional": true
+    },
+    "form-demaker": {
+      "optional": true
+    },
+    "nuqs": {
+      "optional": true
+    },
+    "react-hook-form": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@chakra-ui/cli": "^3.36.0",

@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Separator } from "@chakra-ui/react";
+import { Flex, FlexProps, IconButtonProps, Separator } from "@chakra-ui/react";
 import { AdaptiveInputProps } from "form-demaker";
 import { ReactNode, useMemo } from "react";
 
@@ -6,7 +6,10 @@ import { FilterItem } from "./FilterItem";
 import DefaultAppliedIcon from "./Icons/DefaultAppliedIcon";
 import DefaultFilterIcon from "./Icons/DefaultFilterIcon";
 import DefaultRemoveIcon from "./Icons/DefaultRemoveIcon";
-import { QueryFiltersApplied } from "./QueryFiltersApplied";
+import {
+  QueryFiltersApplied,
+  QueryFiltersBadgeProps,
+} from "./QueryFiltersApplied";
 import { Title } from "./Title";
 
 export interface QueryFiltersIcons {
@@ -33,6 +36,8 @@ export interface QueryFiltersProps extends FlexProps {
   icons?: QueryFiltersIcons;
   textColor?: QueryFiltersTextColor;
   iconColor?: QueryFiltersIconColor;
+  badgeProps?: QueryFiltersBadgeProps;
+  removeButtonProps?: IconButtonProps;
 }
 
 const QueryFilters = ({
@@ -42,6 +47,8 @@ const QueryFilters = ({
   icons,
   textColor,
   iconColor,
+  badgeProps,
+  removeButtonProps,
   ...props
 }: QueryFiltersProps) => {
   const names = useMemo(() => inputs.map((input) => input.name), [inputs]);
@@ -65,6 +72,8 @@ const QueryFilters = ({
 
       <QueryFiltersApplied
         names={names}
+        badgeProps={badgeProps}
+        removeButtonProps={removeButtonProps}
         appliedIcon={
           icons?.applied ?? (
             <DefaultAppliedIcon

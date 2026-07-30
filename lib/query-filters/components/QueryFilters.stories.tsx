@@ -102,6 +102,21 @@ export const WithAppliedFilters: Story = {
   parameters: { searchParams: "?Name=Ada&DPI=123" },
 };
 
+/** `badgeProps` as a function styles each chip from its own filter. */
+export const StyledChips: Story = {
+  args: {
+    title: "Citizens",
+    dataCount: 2,
+    inputs: multipleInputs,
+    badgeProps: (filter) =>
+      filter.name === "DPI"
+        ? { variant: "solid" }
+        : { variant: "subtle", colorPalette: "teal" },
+  },
+  decorators: [withInMemoryUrl],
+  parameters: { searchParams: "?Name=Ada&DPI=123" },
+};
+
 /** Adds and removes a filter end to end, driven automatically. */
 export const AddAndRemoveFilter: Story = {
   args: {

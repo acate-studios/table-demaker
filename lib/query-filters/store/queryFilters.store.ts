@@ -1,7 +1,7 @@
 import { parseAsString, useQueryStates } from "nuqs";
 import { useMemo } from "react";
 
-import { queryFilters as TQueryFilter, TStore } from "../types/store.types";
+import { QueryFilter, TStore } from "../types/store.types";
 
 // shallow stays default (true): the URL is the single source of truth and
 // consumers read it client-side, so the server does not need to be notified.
@@ -23,7 +23,7 @@ const useQueryFilters = (names: string[]): TStore => {
 
   const [values, setValues] = useQueryStates(parsers, queryStateOptions);
 
-  const queryFilters: TQueryFilter[] = names
+  const queryFilters: QueryFilter[] = names
     .filter((name) => Boolean(values[name]))
     .map((name) => ({ name, value: values[name] as string }));
 

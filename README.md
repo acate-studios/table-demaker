@@ -239,6 +239,35 @@ Extends Chakra's `FlexProps`, so layout props (`gap`, `mb`, `width`…) pass str
 | `icons`     | `{ filter?, applied?, remove? }`                            | Replace the default icons with your own nodes                            | -       |
 | `textColor` | `{ title?, subtitle? }`                                     | Optional color override for the title and the secondary text             | -       |
 | `iconColor` | `{ filter?, applied?, remove? }`                            | Optional color override for the **default** icons only                   | -       |
+| `badgeProps` | `BadgeProps \| (filter, index) => BadgeProps`               | Passthrough props for the applied-filter chips                           | -       |
+| `removeButtonProps` | `IconButtonProps`                                   | Passthrough props for each chip's remove button                          | -       |
+
+### Styling the applied-filter chips
+
+`badgeProps` and `removeButtonProps` are passthroughs, in the same spirit as `DataTable`'s `filterProps` and `paginationButtonProps`. Pass an object to restyle every chip at once:
+
+```tsx
+<QueryFilters
+  inputs={inputs}
+  badgeProps={{ variant: "solid", colorPalette: "teal" }}
+  removeButtonProps={{ size: "sm" }}
+/>
+```
+
+Pass a function to style each chip independently — it receives the filter and its index, so you can branch on the field **or** on the value:
+
+```tsx
+<QueryFilters
+  inputs={inputs}
+  badgeProps={(filter) =>
+    filter.name === "DPI"
+      ? { variant: "solid" }
+      : { variant: "subtle", colorPalette: "teal" }
+  }
+/>
+```
+
+These props can override styling but never the internal wiring: the remove button's `onClick` is applied after the spread, so passing your own `onClick` cannot break filter removal.
 
 ### Colors and icons
 

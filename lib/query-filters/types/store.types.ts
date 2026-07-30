@@ -1,11 +1,11 @@
-export type queryFilters = {
+export type QueryFilter = {
   name: string;
   value: string;
 };
 
 export type TStore = {
-  queryFilters: queryFilters[];
-  setQueryFilters: (queryFilters: queryFilters[]) => void;
-  addQueriesFilters: (queryFilter: queryFilters[]) => void;
+  queryFilters: QueryFilter[];
+  setQueryFilters: (queryFilters: QueryFilter[]) => void;
+  addQueriesFilters: (queryFilter: QueryFilter[]) => void;
   deleteQueryFilter: (index: number) => void;
 };

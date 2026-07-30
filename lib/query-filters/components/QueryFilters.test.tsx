@@ -168,6 +168,66 @@ describe("QueryFilters", () => {
     expect(options.history).toBe("replace");
   });
 
+  it("applies badgeProps to every chip when given an object", () => {
+    renderWithProviders(
+      <QueryFilters
+        title="Users"
+        inputs={TEST_INPUTS}
+        badgeProps={{ "data-testid": "chip" }}
+      />,
+      { searchParams: "?DPI=123&Name=Ada" },
+    );
+
+    expect(screen.getAllByTestId("chip")).toHaveLength(2);
+  });
+
+  it("resolves badgeProps per chip when given a function", () => {
+    renderWithProviders(
+      <QueryFilters
+        title="Users"
+        inputs={TEST_INPUTS}
+        badgeProps={(filter) => ({ "data-testid": `chip-${filter.name}` })}
+      />,
+      { searchParams: "?DPI=123&Name=Ada" },
+    );
+
+    expect(screen.getByTestId("chip-DPI")).toBeInTheDocument();
+    expect(screen.getByTestId("chip-Name")).toBeInTheDocument();
+  });
+
+  it("applies removeButtonProps to the remove button", () => {
+    renderWithProviders(
+      <QueryFilters
+        title="Users"
+        inputs={TEST_INPUTS}
+        removeButtonProps={{ "aria-label": "Quitar filtro" }}
+      />,
+      { searchParams: "?DPI=123" },
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Quitar filtro" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the remove wiring when removeButtonProps passes its own onClick", async () => {
+    const user = userEvent.setup();
+    const consumerClick = vi.fn();
+    renderWithProviders(
+      <QueryFilters
+        title="Users"
+        inputs={TEST_INPUTS}
+        removeButtonProps={{ onClick: consumerClick }}
+      />,
+      { searchParams: "?DPI=123" },
+    );
+
+    await user.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(screen.queryByText(/DPI: 123/)).not.toBeInTheDocument();
+    expect(consumerClick).not.toHaveBeenCalled();
+  });
+
   it("drops the filter key from the URL when it is removed", async () => {
     const user = userEvent.setup();
     const onUrlUpdate = vi.fn();

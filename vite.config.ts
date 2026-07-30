@@ -21,6 +21,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, "lib/index.ts"),
+        "query-filters": resolve(__dirname, "lib/query-filters/index.ts"),
       },
       formats: ["es"],
     },
@@ -31,6 +32,11 @@ export default defineConfig({
         "@chakra-ui/react",
         "@emotion/react",
         "@tanstack/react-table",
+        "nuqs",
+        "form-demaker",
+        "react-hook-form",
+        "zod",
+        "@hookform/resolvers",
       ],
       output: {
         assetFileNames: "assets/[name][extname]",

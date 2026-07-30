@@ -23,6 +23,7 @@ A modern, faithful `DataTable` component for React, built on TanStack Table and 
 - 🧩 **Custom cells**: full power of TanStack's `ColumnDef`
 - 🔧 **TypeScript**: fully typed and generic over your row type
 - 🧪 **Tested**: ships with a Vitest suite
+- 🔎 **URL filters**: optional [`table-demaker/query-filters`](#-table-demakerquery-filters) entry point for filters synced to the query string
 
 ---
 
@@ -148,6 +149,102 @@ const columns: ColumnDef<User>[] = [
 ```
 
 The passthrough props can override styling but never the internal wiring (controlled filter value, pagination handlers).
+
+---
+
+## 🔎 `table-demaker/query-filters`
+
+A separate entry point that ships `QueryFilters`: a filter bar whose state lives in the **URL query string**, so a filtered view is shareable, bookmarkable and survives a reload. It is built on [nuqs](https://nuqs.dev) for the URL state and [form-demaker](https://www.npmjs.com/package/form-demaker) for the form.
+
+```tsx
+import { QueryFilters } from "table-demaker/query-filters";
+```
+
+### Extra peer dependencies
+
+On top of the ones above, this entry point needs:
+
+```bash
+npm install nuqs form-demaker react-hook-form @hookform/resolvers zod
+```
+
+| Peer dependency       | Version   |
+| --------------------- | --------- |
+| `nuqs`                | `^2.9.0`  |
+| `form-demaker`        | `^1.2.0`  |
+| `react-hook-form`     | `^7.65.0` |
+| `@hookform/resolvers` | `^5.2.2`  |
+| `zod`                 | `^4.1.12` |
+
+### Wiring the nuqs adapter
+
+`QueryFilters` reads and writes the URL through nuqs, which requires **an adapter for your router, mounted once at the app root**. Without it the component throws. Pick the adapter that matches your stack ([full list](https://nuqs.dev/docs/adapters)):
+
+```tsx
+// React SPA (Vite)
+import { NuqsAdapter } from "nuqs/adapters/react";
+
+export function App() {
+  return (
+    <NuqsAdapter>
+      <ChakraProvider value={system}>
+        <Users />
+      </ChakraProvider>
+    </NuqsAdapter>
+  );
+}
+```
+
+For Next.js App Router use `nuqs/adapters/next/app` (wrap `{children}` in the root layout); for React Router v7, `nuqs/adapters/react-router/v7`.
+
+### Quick start
+
+`inputs` is the only required prop: it declares the filterable fields, and each field's `name` becomes the query param it writes to.
+
+```tsx
+import { type AdaptiveInputProps } from "form-demaker";
+import { QueryFilters } from "table-demaker/query-filters";
+
+const inputs: AdaptiveInputProps[] = [
+  {
+    inputType: "text",
+    name: "Name",
+    label: "Name",
+    inputProps: { placeholder: "Enter a name" },
+  },
+  {
+    inputType: "number",
+    name: "DPI",
+    label: "DPI",
+    inputProps: { placeholder: "Enter a DPI" },
+  },
+];
+
+export function Users() {
+  return <QueryFilters title="Users" dataCount={12} inputs={inputs} />;
+}
+```
+
+Applying the `Name` filter yields `?Name=Ada`; removing it drops the key from the URL. Read the values back anywhere with nuqs (`useQueryState("Name")`) and feed them to your fetch or to `<DataTable />`.
+
+### `<QueryFilters />`
+
+Extends Chakra's `FlexProps`, so layout props (`gap`, `mb`, `width`…) pass straight through to the root `Flex`.
+
+| Prop        | Type                                                        | Description                                                              | Default |
+| ----------- | ----------------------------------------------------------- | ------------------------------------------------------------------------ | ------- |
+| `inputs`    | `AdaptiveInputProps[]`                                      | **Required.** Filterable fields; each `name` maps to one query param      | -       |
+| `title`     | `string`                                                    | Heading next to the filter menu                                          | -       |
+| `dataCount` | `number`                                                    | Result count rendered beside the title                                   | -       |
+| `icons`     | `{ filter?, applied?, remove? }`                            | Replace the default icons with your own nodes                            | -       |
+| `textColor` | `{ title?, subtitle? }`                                     | Optional color override for the title and the secondary text             | -       |
+| `iconColor` | `{ filter?, applied?, remove? }`                            | Optional color override for the **default** icons only                   | -       |
+
+### Colors and icons
+
+The library imposes **no color and no token** — text and icons inherit the foreground of your Chakra provider via `currentColor`, and secondary text is dimmed with `opacity`, not a gray. So the normal usage is **zero color props**.
+
+`textColor` and `iconColor` are an escape hatch for one-off overrides. `iconColor` only tints the built-in icons; if you replace an icon through `icons`, that node owns its own color and the matching `iconColor` slot is ignored.
 
 ---
 

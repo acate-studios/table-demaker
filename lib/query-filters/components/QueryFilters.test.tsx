@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AdaptiveInputProps } from "form-demaker";
 import { NuqsTestingAdapter } from "nuqs/adapters/testing";
-import { PropsWithChildren, ReactElement } from "react";
+import { ComponentProps, PropsWithChildren, ReactElement } from "react";
 
 import QueryFilters from "./QueryFilters";
 
@@ -34,13 +34,22 @@ const TEST_INPUTS: AdaptiveInputProps[] = [
   },
 ];
 
+type OnUrlUpdate = ComponentProps<typeof NuqsTestingAdapter>["onUrlUpdate"];
+
 const renderWithProviders = (
   ui: ReactElement,
-  { searchParams = "" }: { searchParams?: string } = {},
+  {
+    searchParams = "",
+    onUrlUpdate,
+  }: { searchParams?: string; onUrlUpdate?: OnUrlUpdate } = {},
 ) => {
   const Wrapper = ({ children }: PropsWithChildren) => (
     <ChakraProvider value={defaultSystem}>
-      <NuqsTestingAdapter searchParams={searchParams} hasMemory>
+      <NuqsTestingAdapter
+        searchParams={searchParams}
+        onUrlUpdate={onUrlUpdate}
+        hasMemory
+      >
         {children}
       </NuqsTestingAdapter>
     </ChakraProvider>
@@ -136,5 +145,43 @@ describe("QueryFilters", () => {
     expect(
       await screen.findByText(/Email: ada@demaker.dev/),
     ).toBeInTheDocument();
+  });
+
+  it("syncs an added filter to the URL query string", async () => {
+    const user = userEvent.setup();
+    const onUrlUpdate = vi.fn();
+    renderWithProviders(<QueryFilters title="Users" inputs={TEST_INPUTS} />, {
+      onUrlUpdate,
+    });
+
+    await user.click(screen.getByRole("button", { name: /Filter By/i }));
+    await user.type(
+      await screen.findByPlaceholderText("Enter your Email"),
+      "ada@demaker.dev",
+    );
+    await user.click(screen.getByRole("button", { name: "Apply" }));
+
+    await vi.waitFor(() => expect(onUrlUpdate).toHaveBeenCalled());
+
+    const { searchParams, options } = onUrlUpdate.mock.lastCall![0];
+    expect(searchParams.get("Email")).toBe("ada@demaker.dev");
+    expect(options.history).toBe("replace");
+  });
+
+  it("drops the filter key from the URL when it is removed", async () => {
+    const user = userEvent.setup();
+    const onUrlUpdate = vi.fn();
+    renderWithProviders(<QueryFilters title="Users" inputs={TEST_INPUTS} />, {
+      searchParams: "?DPI=123",
+      onUrlUpdate,
+    });
+
+    await user.click(screen.getByRole("button", { name: "Close" }));
+
+    await vi.waitFor(() => expect(onUrlUpdate).toHaveBeenCalled());
+
+    // clearOnDefault: true — the key is dropped entirely, not left as "DPI="
+    const { searchParams } = onUrlUpdate.mock.lastCall![0];
+    expect(searchParams.has("DPI")).toBe(false);
   });
 });

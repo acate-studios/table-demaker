@@ -1,8 +1,12 @@
 import { Badge, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { type AdaptiveInputProps } from "form-demaker";
+import { parseAsString, useQueryStates } from "nuqs";
+import { NuqsAdapter } from "nuqs/adapters/react";
+import { useMemo, useState } from "react";
 
 import { type ColumnDef, DataTable } from "../lib";
 import { Provider } from "../lib/components/ui/provider";
+import { QueryFilters } from "../lib/query-filters";
 
 interface User {
   id: number;
@@ -69,45 +73,101 @@ const columns: ColumnDef<User>[] = [
   },
 ];
 
-function App() {
+// Each `name` becomes the query param the filter writes to.
+const filterInputs: AdaptiveInputProps[] = [
+  {
+    inputType: "text",
+    name: "name",
+    label: "Nombre",
+    inputProps: { placeholder: "Buscar por nombre" },
+  },
+  {
+    inputType: "text",
+    name: "email",
+    label: "Email",
+    inputProps: { placeholder: "Buscar por email" },
+  },
+  {
+    inputType: "text",
+    name: "role",
+    label: "Rol",
+    inputProps: { placeholder: "Buscar por rol" },
+  },
+];
+
+// Read side: the library writes the URL, the app reads it back with nuqs.
+const filterParsers = {
+  name: parseAsString,
+  email: parseAsString,
+  role: parseAsString,
+};
+
+function UsersPanel() {
   const [loading, setLoading] = useState(false);
+  const [filters] = useQueryStates(filterParsers);
+
+  const visibleUsers = useMemo(
+    () =>
+      users.filter((user) =>
+        Object.entries(filters).every(([field, value]) => {
+          if (!value) {
+            return true;
+          }
+
+          return String(user[field as keyof User])
+            .toLowerCase()
+            .includes(value.toLowerCase());
+        }),
+      ),
+    [filters],
+  );
 
   return (
-    <Provider>
-      <Stack
-        align="stretch"
-        gap={8}
-        maxW="1400px"
-        mx="auto"
-        py={10}
-        px={{ base: 4, md: 8 }}
-      >
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          wrap="wrap"
-          gap={4}
-        >
-          <Flex alignItems="center" gap={3}>
-            <Heading size="2xl" fontWeight="bold">
-              📊 Table deMaker
-            </Heading>
-            <Badge colorPalette="teal" size="lg" variant="subtle">
-              Demo
-            </Badge>
-          </Flex>
-
-          <Button onClick={() => setLoading((prev) => !prev)}>
-            {loading ? "Mostrar datos" : "Simular carga"}
-          </Button>
+    <Stack
+      align="stretch"
+      gap={8}
+      maxW="1400px"
+      mx="auto"
+      py={10}
+      px={{ base: 4, md: 8 }}
+    >
+      <Flex justifyContent="space-between" alignItems="center" wrap="wrap" gap={4}>
+        <Flex alignItems="center" gap={3}>
+          <Heading size="2xl" fontWeight="bold">
+            📊 Table deMaker
+          </Heading>
+          <Badge colorPalette="teal" size="lg" variant="subtle">
+            Demo
+          </Badge>
         </Flex>
 
-        <Text fontSize="lg" color="gray.600">
-          Filtro global, paginado y celdas custom — misma API que en acate-ui.
-        </Text>
+        <Button onClick={() => setLoading((prev) => !prev)}>
+          {loading ? "Mostrar datos" : "Simular carga"}
+        </Button>
+      </Flex>
 
-        <DataTable data={users} columns={columns} loading={loading} />
-      </Stack>
+      <Text fontSize="lg" color="gray.600">
+        Filtro global, paginado y celdas custom — misma API que en acate-ui.
+      </Text>
+
+      <QueryFilters
+        title="Usuarios"
+        dataCount={visibleUsers.length}
+        inputs={filterInputs}
+      />
+
+      <DataTable data={visibleUsers} columns={columns} loading={loading} />
+    </Stack>
+  );
+}
+
+function App() {
+  return (
+    <Provider>
+      {/* QueryFilters throws without an adapter mounted above it. */}
+      <NuqsAdapter>
+        <UsersPanel />
+      </NuqsAdapter>
     </Provider>
   );
 }
